@@ -94,6 +94,12 @@ export function Hero() {
   });
   s.current.trade = trade;
 
+  // Start the live stream once the CSS entrance has settled.
+  useEffect(() => {
+    const t = window.setTimeout(() => setLoaded(true), 1500);
+    return () => window.clearTimeout(t);
+  }, []);
+
   useEffect(() => {
     const mq = window.matchMedia(MQ.reduce);
     const update = () => setReduced(mq.matches);
@@ -386,22 +392,10 @@ export function Hero() {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      mm.add({ motion: "(prefers-reduced-motion: no-preference)", full: MQ.full }, (ctx) => {
-        const { motion, full } = ctx.conditions as { motion: boolean; full: boolean };
-        if (!motion) {
-          setLoaded(true);
-          return;
-        }
-        const q = gsap.utils.selector(root);
-        const tl = gsap.timeline({ defaults: { ease: ease.arrive }, onComplete: () => setLoaded(true) });
-        tl.from(q(".h1-line-a"), { yPercent: -108, duration: dur.slow, ease: ease.shutter })
-          .from(q(".h1-line-b"), { yPercent: 108, duration: dur.slow }, "<0.15")
-          .from(q(".hero-sub, .hero-actions"), { autoAlpha: 0, y: 14, duration: dur.base, stagger: 0.08 }, "<0.3")
-          .from(q(".reg"), { autoAlpha: 0, y: 24, duration: dur.slow }, "<0.05")
-          .from(shutterRef.current, { scaleY: 0, duration: dur.slow, ease: ease.shutter }, "<0.15")
-          .from(q(".reg-row"), { autoAlpha: 0, duration: dur.quick, stagger: stagger.row }, "<0.3");
-
-        if (full) {
+      // The entrance itself is CSS (globals.css, "hero entrance"), so it plays on first
+      // paint without waiting for JavaScript. Only the scroll exit lives here.
+      mm.add(MQ.full, () => {
+        {
           gsap.to(copyRef.current, {
             y: () => -window.innerHeight * 0.06,
             autoAlpha: 0.35,
@@ -520,7 +514,7 @@ export function Hero() {
               <p ref={noteSaid} className="note-said" />
             </div>
           </div>
-          <div ref={panelOuter}>
+          <div ref={panelOuter} className="hero-panel">
             <div ref={panelInner} role="region" aria-label="Sample appointment register">
               <p className="sr-only">
                 A sample register. Messages that arrive after closing are booked into tomorrow&apos;s free slots automatically.

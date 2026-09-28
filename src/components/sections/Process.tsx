@@ -21,6 +21,8 @@ export function Process() {
             type: "lines",
             mask: "lines",
             autoSplit: true,
+            // aria-label is not allowed on a plain <p>; split lines still read in order.
+            aria: el.tagName === "P" ? "none" : "auto",
             onSplit: (self) =>
               gsap.from(self.lines, {
                 yPercent: 105,

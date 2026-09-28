@@ -574,6 +574,11 @@ html.has-cursor textarea {
 }
 .reg-row .entry-inner {
   display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
 }
 .reg-row .status {
   font-size: 0.8125rem;
@@ -704,6 +709,12 @@ html.has-cursor textarea {
   line-height: 1.4;
   color: var(--color-chalk);
   quotes: "\201C" "\201D";
+}
+.note-said::before {
+  content: open-quote;
+}
+.note-said::after {
+  content: close-quote;
 }
 .route-layer {
   position: absolute;
@@ -1676,5 +1687,72 @@ html.has-cursor textarea {
     white-space: normal;
     font-size: 1.9rem;
     line-height: 1.05;
+  }
+}
+
+/* ---------------------------------------------------------- hero entrance */
+/* CSS, not JS: it runs on first paint, so nothing waits for hydration and the
+   subtext (the largest text on first load) is painted immediately. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .h1-line-a {
+    animation: h1-drop 0.9s var(--ease-shutter) 0.1s both;
+  }
+  .h1-line-b {
+    animation: h1-rise 0.9s var(--ease-arrive) 0.25s both;
+  }
+  .hero-sub {
+    animation: hero-rise 0.7s var(--ease-arrive) 0.45s both;
+  }
+  .hero-actions {
+    animation: hero-rise 0.7s var(--ease-arrive) 0.55s both;
+  }
+  .hero .reg {
+    animation: panel-in 0.9s var(--ease-arrive) 0.45s both;
+  }
+  .hero .reg-shutter {
+    animation: shutter-drop 0.9s var(--ease-shutter) 0.6s both;
+  }
+  .hero .reg-row {
+    animation: row-in 0.35s linear both;
+  }
+  .hero .reg-row:nth-child(1) { animation-delay: 0.9s; }
+  .hero .reg-row:nth-child(2) { animation-delay: 0.93s; }
+  .hero .reg-row:nth-child(3) { animation-delay: 0.96s; }
+  .hero .reg-row:nth-child(4) { animation-delay: 0.99s; }
+  .hero .reg-row:nth-child(5) { animation-delay: 1.02s; }
+  .hero .reg-row:nth-child(6) { animation-delay: 1.05s; }
+  .hero .reg-row:nth-child(7) { animation-delay: 1.08s; }
+  .hero .reg-row:nth-child(8) { animation-delay: 1.11s; }
+}
+@keyframes h1-drop {
+  from {
+    transform: translateY(-108%);
+  }
+}
+@keyframes h1-rise {
+  from {
+    transform: translateY(108%);
+  }
+}
+@keyframes hero-rise {
+  from {
+    transform: translateY(14px);
+  }
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+@keyframes shutter-drop {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes row-in {
+  from {
+    opacity: 0;
   }
 }

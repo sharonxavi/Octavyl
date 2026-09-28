@@ -13,7 +13,7 @@ function walk(dir) {
     if (statSync(p).isDirectory()) walk(p);
     else if (/\.(tsx?|css|mjs)$/.test(name)) {
       readFileSync(p, "utf8").split(/\r?\n/).forEach((line, i) => {
-        const m = line.match(/TODO:?\s*(.*)$/);
+        const m = line.match(/TODO:\s*(.*)$/);
         if (m) hits.push({ file: relative(root, p).replaceAll("\\", "/"), line: i + 1, text: m[1].replace(/\*\/\s*}?$/, "").trim() });
       });
     }

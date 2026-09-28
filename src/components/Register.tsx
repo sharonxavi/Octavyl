@@ -87,7 +87,7 @@ export function RegisterView({
                   type="button"
                   data-cursor="slot"
                   data-cursor-label="Book here"
-                  aria-label={`Free slot at ${row.time}. Send the next request here.`}
+                  aria-label={`${row.time} Free. Send the next request here.`}
                   onClick={() => onFreeClick?.(i)}
                 >
                   {body}

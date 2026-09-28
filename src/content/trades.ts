@@ -83,7 +83,7 @@ export const TRADES: Record<TradeId, Trade> = {
       { time: "18:30" },
     ],
     incoming: [
-      { channel: "WhatsApp", at: "21:42", said: "Any slot tomorrow evening? Tooth pain since morning.", to: "slot", who: "Arun", what: "tooth pain, first visit", via: "WhatsApp" },
+      { channel: "WhatsApp", at: "21:42", said: "Any slot tomorrow evening? Tooth pain since morning.", to: "slot", who: "Arun", what: "tooth pain", via: "WhatsApp" },
       { channel: "Missed call", at: "21:49", said: "Called at 9:49pm. Nobody picked up.", to: "slot", who: "Priya", what: "cleaning", via: "the missed-call reply" },
       { channel: "Instagram", at: "22:03", said: "Do you do braces consultations?", to: "slot", who: "Sundar", what: "braces consult", via: "Instagram" },
       { channel: "Google review", at: "22:16", said: "2 stars. Waited 40 minutes.", to: "needs" },
@@ -112,7 +112,7 @@ export const TRADES: Record<TradeId, Trade> = {
     close: h(20),
     busyReason: "we're at the collection counter",
     register: [
-      { time: "07:00", who: "Mr Iyer", what: "fasting sugar, home" },
+      { time: "07:00", who: "Mr Iyer", what: "fasting sugar" },
       { time: "07:30" },
       { time: "08:00", who: "Kala", what: "thyroid profile" },
       { time: "08:30" },
@@ -122,8 +122,8 @@ export const TRADES: Record<TradeId, Trade> = {
       { time: "17:00" },
     ],
     incoming: [
-      { channel: "WhatsApp", at: "21:42", said: "Can someone collect a blood sample at home tomorrow at 7?", to: "slot", who: "Selvi", what: "home collection, fasting", via: "WhatsApp" },
-      { channel: "Missed call", at: "21:49", said: "Called at 9:49pm. Nobody picked up.", to: "slot", who: "Bala", what: "full body check-up", via: "the missed-call reply" },
+      { channel: "WhatsApp", at: "21:42", said: "Can someone collect a blood sample at home tomorrow at 7?", to: "slot", who: "Selvi", what: "home collection", via: "WhatsApp" },
+      { channel: "Missed call", at: "21:49", said: "Called at 9:49pm. Nobody picked up.", to: "slot", who: "Bala", what: "full check-up", via: "the missed-call reply" },
       { channel: "Instagram", at: "22:03", said: "Price for a full body check-up?", to: "slot", who: "Hari", what: "full body check-up", via: "Instagram" },
       { channel: "Google review", at: "22:16", said: "2 stars. Report came a day late.", to: "needs" },
       { channel: "WhatsApp", at: "22:31", said: "Book an ECG for my father tomorrow?", to: "slot", who: "Ramesh", what: "ECG", via: "WhatsApp" },
@@ -161,9 +161,9 @@ export const TRADES: Record<TradeId, Trade> = {
       { time: "19:00" },
     ],
     incoming: [
-      { channel: "WhatsApp", at: "21:42", said: "Is there a ladies' batch in the morning?", to: "slot", who: "Kavya", what: "ladies' batch trial", via: "WhatsApp" },
+      { channel: "WhatsApp", at: "21:42", said: "Is there a ladies' batch in the morning?", to: "slot", who: "Kavya", what: "ladies' batch", via: "WhatsApp" },
       { channel: "Missed call", at: "21:49", said: "Called at 9:49pm. Nobody picked up.", to: "slot", who: "Imran", what: "trial class", via: "the missed-call reply" },
-      { channel: "Instagram", at: "22:03", said: "Monthly fee?", to: "slot", who: "Deepa", what: "trial, fee card sent", via: "Instagram" },
+      { channel: "Instagram", at: "22:03", said: "Monthly fee?", to: "slot", who: "Deepa", what: "trial class", via: "Instagram" },
       { channel: "Google review", at: "22:16", said: "2 stars. AC not working on Sunday.", to: "needs" },
       { channel: "WhatsApp", at: "22:31", said: "Can I book a PT session tomorrow evening?", to: "slot", who: "Arjun", what: "PT session", via: "WhatsApp" },
       { channel: "Ad click", at: "22:48", said: "Tapped your new-year offer.", to: "slot", who: "Nisha", what: "offer trial", via: "the offer page" },
@@ -200,11 +200,11 @@ export const TRADES: Record<TradeId, Trade> = {
       { time: "19:00" },
     ],
     incoming: [
-      { channel: "WhatsApp", at: "21:42", said: "Any slot tomorrow for a haircut and blow-dry?", to: "slot", who: "Janani", what: "haircut and blow-dry", via: "WhatsApp" },
+      { channel: "WhatsApp", at: "21:42", said: "Any slot tomorrow for a haircut and blow-dry?", to: "slot", who: "Janani", what: "cut and blow-dry", via: "WhatsApp" },
       { channel: "Missed call", at: "21:49", said: "Called at 9:49pm. Nobody picked up.", to: "slot", who: "Swetha", what: "threading", via: "the missed-call reply" },
       { channel: "Instagram", at: "22:03", said: "Price for keratin?", to: "slot", who: "Nandini", what: "keratin consult", via: "Instagram" },
       { channel: "Google review", at: "22:16", said: "2 stars. Had to wait 30 minutes.", to: "needs" },
-      { channel: "WhatsApp", at: "22:31", said: "Mehendi for 4 people on Sunday?", to: "slot", who: "Meera", what: "mehendi, 4 people", via: "WhatsApp" },
+      { channel: "WhatsApp", at: "22:31", said: "Mehendi for 4 people on Sunday?", to: "slot", who: "Meera", what: "mehendi for 4", via: "WhatsApp" },
       { channel: "Ad click", at: "22:48", said: "Tapped your Diwali offer.", to: "slot", who: "Pooja", what: "Diwali facial", via: "the offer page" },
     ],
     night: [

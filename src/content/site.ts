@@ -89,7 +89,7 @@ export const ABOUT = {
   title: "The person who builds it answers the phone.", // TODO: confirm this is true for your team.
   body: [
     "We're a small team in Chennai building websites, WhatsApp replies and booking systems for clinics, gyms and shops.", // TODO: team size, names, how you started.
-    "Everything is set up on your own number and accounts, so it stays yours if you ever leave us.", // TODO: confirm.
+    "Everything is set up on your own number and accounts, so it stays yours if you ever leave us.", // TODO: confirm accounts and numbers are set up in the client's name.
   ],
   facts: ["We work in Tamil and English.", "We come to your shop.", "You own the accounts and the number."], // TODO: confirm each fact.
   photoNote: "Photo placeholder: the founder at a client's counter.", // TODO: real photo with real alt text.

@@ -66,6 +66,8 @@ export function Build() {
             type: "lines",
             mask: "lines",
             autoSplit: true,
+            // aria-label is not allowed on a plain <p>; split lines still read in order.
+            aria: el.tagName === "P" ? "none" : "auto",
             onSplit: (self) =>
               gsap.from(self.lines, {
                 yPercent: 105,
@@ -224,7 +226,7 @@ function Demo() {
   }, [key]);
 
   return (
-    <div className="wrap mt-24 lg:mt-36">
+    <div id="demo" className="wrap mt-24 lg:mt-36">
       <div className="demo grid12 gap-y-10 px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="col-span-4 lg:col-span-5">
           <h3 className="t-h3">{BUILD.demoTitle}</h3>
