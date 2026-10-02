@@ -1,0 +1,464 @@
+/* Home: work. Case-study cards. Stacked by default; pinned and sideways on desktop with motion. */
+
+.wk {
+  position: relative;
+  padding-block: 7rem;
+}
+.wk-head {
+  row-gap: 20px;
+}
+.wk-title,
+.wk-lead {
+  grid-column: 1 / -1;
+}
+.wk-count {
+  display: none;
+}
+
+.wk-stage {
+  margin-top: 48px;
+}
+.wk-track {
+  display: grid;
+  gap: 64px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--margin);
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ card */
+
+.wk-card {
+  position: relative;
+  display: block;
+  border-radius: 6px;
+  color: var(--color-chalk);
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.wk-media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--color-street);
+}
+.wk-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  will-change: transform;
+}
+/* Sized by width, so the screen keeps its share of the picture at any aspect;
+   its frame runs past the bottom edge like a cropped photo. */
+.wk-svg {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  width: 82%;
+  height: auto;
+  max-width: none;
+  transform: translateX(-46%);
+  overflow: visible;
+}
+@media (max-width: 767.98px) {
+  .wk-svg {
+    top: 22%;
+  }
+}
+@media (min-width: 768px) {
+  .wk-svg {
+    width: 66%;
+  }
+}
+.wk-tag {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  background: var(--color-street);
+}
+
+/* Screen parts. One palette for all three: rule, dim, dawn and a single signal square. */
+.wk-s-frame {
+  fill: var(--color-night);
+  stroke: var(--color-rule);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.wk-s-rule {
+  stroke: var(--color-rule);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.wk-s-bar {
+  fill: var(--color-rule);
+}
+.wk-s-bar-hi {
+  fill: var(--color-street);
+}
+.wk-s-dim {
+  fill: var(--color-dim);
+  opacity: 0.55;
+}
+.wk-s-dawn {
+  fill: var(--color-dawn);
+}
+.wk-s-signal {
+  fill: var(--color-signal);
+}
+.wk-s-target {
+  fill: none;
+  stroke: var(--color-dawn);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.wk-s-reply {
+  fill: var(--color-night);
+  stroke: var(--color-dawn);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.wk-s-tick {
+  fill: none;
+  stroke: var(--color-dawn);
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+}
+.wk-s-text {
+  fill: var(--color-dim);
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 84;
+  font-weight: 540;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.wk-s-text-on {
+  fill: var(--color-dawn);
+}
+.wk-s-cell {
+  fill: none;
+  stroke: var(--color-rule);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.wk-s-cell-bar {
+  fill: var(--color-rule);
+}
+.wk-s-cell-dawn {
+  fill: var(--color-dawn);
+}
+.wk-s-cell-now {
+  fill: var(--color-signal);
+}
+.wk-s-ink {
+  fill: var(--color-night);
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------------------- caption */
+
+.wk-caption {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  padding: 20px 0 0;
+}
+.wk-cap-who,
+.wk-cap-what {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 8px;
+}
+.wk-cap-top {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.wk-index {
+  font-size: 0.8125rem;
+  line-height: 1;
+  color: var(--color-dim);
+}
+.wk-trade {
+  font-family: var(--font-display);
+  --wdth: 60;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 680;
+  font-size: clamp(1.4rem, 1.9vw, 1.9rem);
+  line-height: 1;
+  transition: color 0.35s var(--ease-arrive);
+}
+.wk-client {
+  font-family: var(--font-display);
+  --wdth: 62;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 650;
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+.wk-place {
+  font-size: 0.9375rem;
+  color: var(--color-dim);
+}
+.wk-built {
+  color: var(--color-chalk);
+}
+.wk-result {
+  color: var(--color-dawn);
+}
+/* Long placeholders wrap inside the caption instead of running off the card. */
+.wk-caption .todo {
+  white-space: normal;
+  max-width: 100%;
+  text-wrap: pretty;
+}
+.wk-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1;
+  color: var(--color-chalk);
+  transition: color 0.35s var(--ease-arrive);
+}
+.wk-arrow {
+  position: relative;
+  width: 18px;
+  height: 9px;
+  transition: transform 0.35s var(--ease-arrive);
+}
+.wk-arrow::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 1px;
+  top: 4px;
+  height: 1.5px;
+  background: currentColor;
+}
+.wk-arrow::after {
+  content: "";
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  width: 7px;
+  height: 7px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+.wk-card:hover .wk-arrow,
+.wk-card:focus-visible .wk-arrow {
+  transform: translateX(4px);
+}
+.wk-card:hover .wk-view,
+.wk-card:focus-visible .wk-view,
+.wk-card:hover .wk-trade,
+.wk-card:focus-visible .wk-trade {
+  color: var(--color-dawn);
+}
+
+/* ------------------------------------------------------------------- end */
+
+/* An empty frame the size of a picture: the slot the next project goes in. */
+.wk-end-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 24px;
+  min-height: 300px;
+  padding: 28px;
+  box-shadow: inset 0 0 0 1px var(--color-rule);
+}
+.wk-end-index {
+  margin-bottom: auto;
+  font-size: 0.8125rem;
+  line-height: 1;
+  color: var(--color-dim);
+}
+.wk-end-title {
+  font-family: var(--font-display);
+  --wdth: 58;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 2.8vw, 2.9rem);
+  line-height: 0.98;
+  max-width: 13ch;
+  text-wrap: balance;
+}
+
+/* --------------------------------------------------------------- tablets */
+
+@media (min-width: 768px) {
+  .wk-media {
+    aspect-ratio: 16 / 9;
+  }
+  .wk-caption {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--gutter);
+  }
+  .wk-lead {
+    grid-column: 1 / span 3;
+  }
+}
+
+/* -------------------------------------- desktop, reduced motion: stacked */
+
+@media (min-width: 1024px) {
+  .wk {
+    padding-block: 10rem;
+  }
+  .wk-title {
+    grid-column: 1 / span 7;
+  }
+  .wk-lead {
+    grid-column: 1 / span 6;
+  }
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .wk-track {
+    gap: 88px;
+  }
+  .wk-card {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    column-gap: var(--gutter);
+    align-items: end;
+  }
+  .wk-media {
+    aspect-ratio: 16 / 10;
+  }
+  .wk-caption {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0;
+  }
+  .wk-end-frame {
+    min-height: 360px;
+    padding: 40px;
+  }
+}
+
+/* ------------------------------------------- desktop with motion: pinned */
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .wk {
+    padding-block: 0;
+  }
+  .wk-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    min-height: 600px;
+    padding: calc(var(--nav-h) + 28px) 0 clamp(20px, 3.5vh, 40px);
+  }
+  .wk-head {
+    flex: none;
+    align-items: end;
+  }
+  .wk-title {
+    grid-column: 1 / span 5;
+  }
+  .wk-lead {
+    grid-column: 6 / span 5;
+    padding-bottom: 0.2em;
+  }
+  .wk-count {
+    grid-column: 11 / span 2;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 0.55em;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--color-dim);
+  }
+  .wk-count-mask {
+    display: inline-block;
+    overflow: hidden;
+    height: 1.2em;
+    line-height: 1.2;
+    padding: 0 1px;
+  }
+  .wk-count-now {
+    display: inline-block;
+    color: var(--color-chalk);
+  }
+  .wk-count-track {
+    position: relative;
+    width: 64px;
+    height: 1px;
+    margin-left: 12px;
+    background: var(--color-rule);
+  }
+  .wk-count-fill {
+    position: absolute;
+    inset: -0.5px 0;
+    background: var(--color-signal);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .wk-stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    margin-top: clamp(20px, 4vh, 44px);
+    overflow: hidden;
+  }
+  .wk-track {
+    --wk-start: max(var(--margin), calc((100% - 1440px) / 2 + var(--margin)));
+    display: flex;
+    align-items: center;
+    gap: clamp(24px, 2.4vw, 44px);
+    width: max-content;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    padding: 0 var(--margin) 0 var(--wk-start);
+  }
+  .wk-item {
+    /* The caption keeps one height on every card, so pictures and the end frame line up. */
+    --wk-cap: clamp(136px, 18vh, 184px);
+    flex: none;
+    width: 58vw;
+    height: min(72vh, calc(100% - 8px));
+  }
+  .wk-card {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) var(--wk-cap);
+    height: 100%;
+  }
+  .wk-media {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+  .wk-caption {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-content: start;
+    column-gap: clamp(24px, 3vw, 48px);
+    row-gap: clamp(12px, 1.8vh, 18px);
+    min-height: 0;
+    padding-top: clamp(16px, 2.4vh, 24px);
+  }
+  .wk-end {
+    width: clamp(340px, 30vw, 480px);
+  }
+  .wk-end-frame {
+    height: calc(100% - var(--wk-cap));
+    min-height: 0;
+  }
+  .wk-end {
+    display: flex;
+    flex-direction: column;
+  }
+}

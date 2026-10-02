@@ -4,8 +4,8 @@ import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { dur, ease, MQ, stagger } from "@/lib/motion";
 import { clock, toMin } from "@/lib/time";
-import { getLenis, onAnchorClick } from "@/lib/scroll";
-import { BRAND, CONTACT, EMAIL, LEGAL_NAME, whatsappHref } from "@/content/site";
+import { getLenis } from "@/lib/scroll";
+import { BRAND, CONTACT, whatsappHref } from "@/content/site";
 import { useTrade } from "../TradeProvider";
 import { BookCall } from "../BookCall";
 import { Magnetic } from "../Magnetic";
@@ -173,46 +173,5 @@ export function Contact() {
           </div>
         </div>
       </section>
-  );
-}
-
-export function Footer() {
-  return (
-    <footer className="footer">
-      <div className="wrap grid12 gap-y-10 py-16 lg:py-20">
-        <div className="col-span-4 lg:col-span-4">
-          <p className="wordmark">{BRAND}</p>
-          <p className="t-small text-dim mt-3 max-w-[30ch]">{CONTACT.footer.serving}</p>
-        </div>
-        <dl className="col-span-4 grid gap-8 sm:grid-cols-3 lg:col-span-7 lg:col-start-6">
-          <div>
-            <dt className="t-small text-dim">Visit</dt>
-            <dd className="mt-1">{CONTACT.footer.visit}</dd>
-          </div>
-          <div>
-            <dt className="t-small text-dim">Hours</dt>
-            <dd className="mt-1">{CONTACT.footer.hours}</dd>
-          </div>
-          <div>
-            <dt className="t-small text-dim">Write</dt>
-            <dd className="mt-1">
-              <a className="link" href={`mailto:${EMAIL}`}>
-                {EMAIL}
-              </a>
-            </dd>
-          </div>
-        </dl>
-      </div>
-      <div className="border-t border-rule">
-        <div className="wrap flex flex-wrap items-center justify-between gap-4 py-6">
-          <p className="t-small text-dim">
-            © 2026 {LEGAL_NAME}
-          </p>
-          <a href="#top" className="t-small link" onClick={onAnchorClick}>
-            Back to top
-          </a>
-        </div>
-      </div>
-    </footer>
   );
 }

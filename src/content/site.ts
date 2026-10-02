@@ -22,12 +22,21 @@ export const whatsappHref = (text: string) =>
 
 export const bookHref = () => BOOKING_URL ?? whatsappHref("Hi, I'd like to book a call about my shop."); // TODO: remove fallback once BOOKING_URL is set.
 
+/** The shared navigation. About and Contact are sections of Home. */
 export const NAV = [
-  { href: "#night", label: "A sample night" },
-  { href: "#build", label: "What we build" },
-  { href: "#process", label: "How we work" },
-  { href: "#about", label: "About" },
+  { id: "home", href: "/", label: "Home" },
+  { id: "solutions", href: "/solutions", label: "Solutions" },
+  { id: "about", href: "/#about", label: "About" },
+  { id: "contact", href: "/#contact", label: "Contact" },
 ] as const;
+export type NavId = (typeof NAV)[number]["id"];
+
+/** Social profiles for the footer. A null href shows a marked placeholder instead of a dead link. */
+export const SOCIAL: { label: string; href: string | null }[] = [
+  { label: "Instagram", href: null }, // TODO: Instagram profile URL, or remove the row.
+  { label: "LinkedIn", href: null }, // TODO: LinkedIn page URL, or remove the row.
+  { label: "Google Maps", href: null }, // TODO: Google Business Profile URL, or remove the row.
+];
 
 export const HERO = {
   lines: ["Shutter down.", "Still taking bookings."],

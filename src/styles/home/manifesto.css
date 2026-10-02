@@ -1,0 +1,45 @@
+/* Home: manifesto. A small label on the left, one large paragraph on the right.
+   It has to read as a paragraph: a looser width than the headlines, a lighter weight,
+   and body-like line length. */
+
+.mf-grid {
+  row-gap: 20px;
+  align-items: baseline;
+}
+
+.mf-label {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.mf-text {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--font-display);
+  --wdth: 70;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 560;
+  font-size: clamp(1.9rem, 3.7vw, 3.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.004em;
+  color: var(--color-chalk);
+  text-wrap: pretty;
+}
+
+/* The three accent phrases: coloured, not italic. */
+.mf-key {
+  font-style: normal;
+  color: var(--color-dawn);
+}
+
+@media (min-width: 1024px) {
+  /* Baselines line up across the two columns; the label then holds its place while the paragraph is read. */
+  .mf-label {
+    grid-column: 1 / span 3;
+    position: sticky;
+    top: calc(var(--nav-h) + 48px);
+  }
+  .mf-text {
+    grid-column: 4 / span 9;
+  }
+}

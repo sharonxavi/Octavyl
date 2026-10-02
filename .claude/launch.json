@@ -4,8 +4,28 @@
     {
       "name": "octavyl",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "3210"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "3210"
+      ],
       "port": 3210
+    },
+    {
+      "name": "octavyl-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "C:/Users/akash/OneDrive/Desktop/Octavyl",
+        "run",
+        "start",
+        "--",
+        "--port",
+        "3300"
+      ],
+      "port": 3300
     }
   ]
 }

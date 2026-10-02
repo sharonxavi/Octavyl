@@ -1,24 +1,36 @@
-import { Nav } from "@/components/Nav";
-import { Hero } from "@/components/sections/Hero";
-import { Night } from "@/components/sections/Night";
-import { Build } from "@/components/sections/Build";
-import { Process } from "@/components/sections/Process";
-import { About } from "@/components/sections/About";
-import { Contact, Footer } from "@/components/sections/Contact";
+import type { Metadata } from "next";
+import { pageMeta } from "@/lib/meta";
+import { HOME_META } from "@/content/home";
+import { HomeHero } from "@/components/home/HomeHero";
+import { Manifesto } from "@/components/home/Manifesto";
+import { Services } from "@/components/home/Services";
+import { HowWeWork } from "@/components/home/HowWeWork";
+import { Industries } from "@/components/home/Industries";
+import { AboutHome } from "@/components/home/AboutHome";
+import { Work } from "@/components/home/Work";
+import { Faq } from "@/components/home/Faq";
+import { ContactHome } from "@/components/home/ContactHome";
 
+export const metadata: Metadata = pageMeta({
+  title: HOME_META.title,
+  description: HOME_META.description,
+  path: "/",
+  card: HOME_META.card,
+});
+
+/** Who we are and what we build. The trade-by-trade sample lives at /solutions. */
 export default function Home() {
   return (
-    <>
-      <Nav />
-      <main id="content">
-        <Hero />
-        <Night />
-        <Build />
-        <Process />
-        <About />
-        <Contact />
-      </main>
-      <Footer />
-    </>
+    <main id="content">
+      <HomeHero />
+      <Manifesto />
+      <Services />
+      <HowWeWork />
+      <Industries />
+      <AboutHome />
+      <Work />
+      <Faq />
+      <ContactHome />
+    </main>
   );
 }

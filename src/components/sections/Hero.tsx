@@ -92,7 +92,12 @@ export function Hero() {
     started: false,
     justFilled: null as number | null,
   });
-  s.current.trade = trade;
+  // Mirror the chosen trade for the stream (an effect, not render, so React can re-render freely).
+  useLayoutEffect(() => {
+    s.current.trade = trade;
+  }, [trade]);
+  // The stream schedules its own next step; the ref always points at the latest version.
+  const stepRef = useRef<() => void>(() => {});
 
   // Start the live stream once the CSS entrance has settled.
   useEffect(() => {
@@ -254,7 +259,7 @@ export function Hero() {
             setFilled({});
             setNeeds(0);
             gsap.set(entries, { clearProps: "opacity,visibility,transform" });
-            st.next = gsap.delayedCall(0.9, step);
+            st.next = gsap.delayedCall(0.9, () => stepRef.current());
           },
         });
       });
@@ -300,9 +305,12 @@ export function Hero() {
         stopDrawing();
         st.target = null;
         markTarget();
-        st.next = gsap.delayedCall(0.9, step);
+        st.next = gsap.delayedCall(0.9, () => stepRef.current());
       });
   }, [chooseRow, freeRows, land, markTarget, startDrawing, stopDrawing]);
+  useLayoutEffect(() => {
+    stepRef.current = step;
+  }, [step]);
 
   const setRunning = useCallback(
     (run: boolean) => {

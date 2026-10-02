@@ -1,4 +1,15 @@
 @import "tailwindcss";
+@import "../styles/shell.css";
+@import "../styles/home/base.css";
+@import "../styles/home/hero.css";
+@import "../styles/home/manifesto.css";
+@import "../styles/home/services.css";
+@import "../styles/home/how.css";
+@import "../styles/home/industries.css";
+@import "../styles/home/about.css";
+@import "../styles/home/work.css";
+@import "../styles/home/faq.css";
+@import "../styles/home/contact.css";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -368,15 +379,6 @@ button {
   letter-spacing: 0.01em;
 }
 
-.menu-sheet {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background: var(--color-street);
-  display: flex;
-  flex-direction: column;
-  padding: calc(var(--nav-h) + 24px) var(--margin) 32px;
-}
 
 /* ------------------------------------------------------------------ cursor */
 
@@ -1543,9 +1545,6 @@ html.has-cursor textarea {
   color: var(--color-dim);
 }
 
-.footer {
-  background: var(--color-deep);
-}
 
 /* ---------------------------------------------------------- reduced motion */
 

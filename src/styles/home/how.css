@@ -1,0 +1,309 @@
+/* Home: how we work. Base: phones and tablets (the drawing sticks above the
+   steps). Wide screens without motion: steps left, drawing right. Desktop with
+   motion: pinned, the drawing scrubs through the four stages. */
+
+.hw {
+  position: relative;
+  padding: 112px 0 120px;
+}
+.hw-head {
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+}
+.hw-body {
+  display: grid;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.hw-art {
+  position: sticky;
+  top: 8px;
+  z-index: 2;
+  padding: 8px 0;
+  background: var(--color-night);
+}
+.hw-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 40vh;
+  overflow: visible;
+}
+
+.hw-steps {
+  position: relative;
+  padding-left: 26px;
+}
+.hw-rail {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--color-rule);
+}
+.hw-rail i {
+  position: absolute;
+  inset: 0;
+  background: var(--color-signal);
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+}
+.hw-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hw-step {
+  padding: 20px 0 26px;
+  box-shadow: inset 0 -1px 0 var(--color-rule);
+}
+.hw-step:first-child {
+  padding-top: 4px;
+}
+.hw-h {
+  margin: 0;
+  font: inherit;
+}
+.hw-btn {
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  background: none;
+  border: 0;
+}
+.hw-n {
+  font-size: 0.875rem;
+  color: var(--color-dim);
+  transition: color 0.35s var(--ease-arrive);
+}
+.hw-name {
+  font-family: var(--font-display);
+  --wdth: 58;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 700;
+  font-size: clamp(1.55rem, 2.3vw, 2.25rem);
+  line-height: 1;
+  color: var(--color-dim);
+  transition: color 0.35s var(--ease-arrive);
+}
+.hw-when {
+  font-size: 0.875rem;
+  color: var(--color-dim);
+  white-space: nowrap;
+}
+.hw-step.is-active .hw-n {
+  color: var(--color-dawn);
+}
+.hw-step.is-active .hw-name,
+.hw-btn:hover .hw-name {
+  color: var(--color-chalk);
+}
+.hw-detail {
+  padding: 12px 0 0 calc(3ch + 12px);
+}
+.hw-does {
+  max-width: 46ch;
+  color: var(--color-chalk);
+}
+.hw-gets {
+  max-width: 46ch;
+  margin-top: 12px;
+  color: var(--color-dawn);
+}
+.hw-gets-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+/* ------------------------------------------------------ the drawing */
+
+.hw-svg .h-card {
+  fill: var(--color-street);
+  stroke: var(--color-rule);
+  stroke-width: 1.5;
+}
+.hw-svg .h-in .h-card {
+  stroke: var(--color-dim);
+}
+.hw-svg .h-bar {
+  fill: var(--color-signal);
+}
+.hw-svg .h-out .h-bar {
+  fill: rgb(143 176 255 / 0.18);
+  opacity: 0;
+}
+.hw-svg .h-scribble {
+  fill: var(--color-dim);
+  opacity: 0;
+}
+.hw-svg .h-t {
+  font-family: var(--font-body);
+  font-size: 12px;
+  fill: var(--color-chalk);
+}
+.hw-svg .h-hi {
+  font-size: 13px;
+}
+/* Phones: the drawing runs edge to edge and its labels grow, so they stay readable. */
+@media (max-width: 767.98px) {
+  .hw-art {
+    margin-inline: calc(-1 * var(--margin));
+    padding-inline: 4px;
+  }
+  .hw-svg .h-t {
+    font-size: 14px;
+  }
+}
+.hw-svg .h-plan {
+  fill: none;
+  stroke: var(--color-dim);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+  opacity: 0;
+}
+.hw-svg .h-wire {
+  fill: none;
+  stroke: var(--color-dim);
+  stroke-opacity: 0.5;
+  stroke-width: 1.5;
+}
+.hw-svg .h-agent-plan {
+  fill: none;
+  stroke: var(--color-dim);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+  opacity: 0;
+}
+.hw-svg .h-agent {
+  fill: var(--color-deep);
+  stroke: var(--color-signal);
+  stroke-width: 1.5;
+}
+.hw-svg .h-msg {
+  fill: var(--color-dawn);
+  opacity: 0;
+}
+.hw-svg [data-h="weeks"] {
+  opacity: 0;
+}
+.hw-svg .h-week-line {
+  fill: none;
+  stroke: var(--color-rule);
+  stroke-width: 1.5;
+}
+.hw-svg .h-week {
+  fill: var(--color-deep);
+  stroke: var(--color-dim);
+  stroke-width: 1.5;
+}
+.hw-svg .h-week-on {
+  fill: var(--color-signal);
+  opacity: 0;
+}
+
+/* ----------------------------------------------- wide screens, any motion */
+
+@media (min-width: 1024px) {
+  .hw-body {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: start;
+    margin-top: 56px;
+  }
+  .hw-steps {
+    grid-column: 1 / span 5;
+    grid-row: 1;
+  }
+  .hw-art {
+    grid-column: 7 / span 6;
+    grid-row: 1;
+    top: calc(var(--nav-h) + 24px);
+    padding: 0;
+    background: none;
+  }
+  .hw-svg {
+    max-height: 70vh;
+  }
+}
+
+/* ------------------------------------------- desktop with motion: pinned */
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .hw {
+    height: 100vh;
+    min-height: 660px;
+    padding: calc(var(--nav-h) + 16px) 0 36px;
+  }
+  .hw-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .hw-head {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: end;
+    max-width: none;
+  }
+  .hw-head h2 {
+    grid-column: 1 / span 6;
+  }
+  .hw-head p {
+    grid-column: 7 / span 5;
+    padding-bottom: 6px;
+  }
+  .hw-body {
+    flex: 1;
+    min-height: 0;
+    margin-top: clamp(20px, 4vh, 44px);
+    align-items: center;
+  }
+  .hw-art {
+    position: relative;
+    top: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .hw-svg {
+    height: 100%;
+    max-height: 100%;
+  }
+  .hw-steps {
+    align-self: center;
+    padding-bottom: 196px;
+  }
+  .hw-rail {
+    bottom: 200px;
+  }
+  .hw-step {
+    padding: clamp(10px, 1.8vh, 16px) 0;
+    box-shadow: none;
+  }
+  .hw-step:first-child {
+    padding-top: 0;
+  }
+  /* One detail box under the list; each step's text is stacked in it. */
+  .hw-detail {
+    position: absolute;
+    left: 26px;
+    right: 0;
+    bottom: 0;
+    height: 176px;
+    padding: 20px 0 0;
+    box-shadow: inset 0 1px 0 var(--color-rule);
+  }
+  .hw-step:not(.is-active) .hw-detail {
+    visibility: hidden;
+    opacity: 0;
+  }
+}

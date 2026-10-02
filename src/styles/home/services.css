@@ -1,0 +1,401 @@
+/* Home: what we build. Base styles are the accordion (phones, tablets, reduced
+   motion). Desktop with motion turns the same markup into a pinned list + panel. */
+
+.sv {
+  position: relative;
+  padding: 112px 0 120px;
+}
+.sv-head {
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+}
+.sv-body {
+  position: relative;
+  margin-top: 44px;
+}
+.sv-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: inset 0 1px 0 var(--color-rule);
+}
+.sv-item {
+  box-shadow: inset 0 -1px 0 var(--color-rule);
+}
+.sv-h {
+  margin: 0;
+  font: inherit;
+}
+.sv-btn {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr) 20px;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  padding: 20px 0;
+  text-align: left;
+  background: none;
+  border: 0;
+}
+.sv-num {
+  font-size: 0.875rem;
+  color: var(--color-dim);
+  transition: color 0.35s var(--ease-arrive);
+}
+.sv-title {
+  font-family: var(--font-display);
+  --wdth: 56;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 680;
+  font-size: clamp(1.5rem, 2.6vw, 2.75rem);
+  line-height: 1.02;
+  color: var(--color-dim);
+  transition: color 0.35s var(--ease-arrive);
+}
+.sv-btn:hover .sv-title,
+.sv-item.is-open .sv-title {
+  color: var(--color-chalk);
+}
+.sv-item.is-open .sv-num {
+  color: var(--color-dawn);
+}
+
+/* Plus that becomes a minus. */
+.sv-plus {
+  position: relative;
+  align-self: center;
+  width: 14px;
+  height: 14px;
+}
+.sv-plus::before,
+.sv-plus::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6.25px;
+  width: 14px;
+  height: 1.5px;
+  background: var(--color-chalk);
+  transition: transform 0.4s var(--ease-arrive);
+}
+.sv-plus::after {
+  transform: rotate(90deg);
+}
+.sv-item.is-open .sv-plus::after {
+  transform: rotate(0deg);
+}
+
+/* Accordion: grid rows animate open and closed, no measuring. */
+.sv-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-arrive);
+}
+.sv-item.is-open .sv-panel {
+  grid-template-rows: 1fr;
+}
+.sv-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+.sv-panel-inner {
+  display: grid;
+  gap: 18px;
+  padding: 4px 0 28px;
+}
+
+.sv-art-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 480 / 184;
+  padding: 14px 10px;
+  background: var(--color-night);
+  box-shadow: inset 0 0 0 1px var(--color-rule);
+  border: 0;
+  border-radius: 6px;
+}
+@media (max-width: 767.98px) {
+  /* Phones: no inner padding or frame, so the drawing gets the full width. */
+  .sv-art-frame {
+    padding: 12px 0;
+    border-radius: 0;
+    box-shadow: inset 0 1px 0 var(--color-rule), inset 0 -1px 0 var(--color-rule);
+  }
+}
+.sv-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.sv-outcome {
+  font-family: var(--font-display);
+  --wdth: 66;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.7vw, 1.75rem);
+  line-height: 1.12;
+  color: var(--color-chalk);
+  max-width: 30ch;
+  text-wrap: balance;
+}
+.sv-label {
+  color: var(--color-dim);
+  margin-bottom: 6px;
+}
+.sv-builds ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sv-builds li {
+  position: relative;
+  padding: 10px 0 10px 20px;
+  box-shadow: inset 0 1px 0 var(--color-rule);
+}
+.sv-builds li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 19px;
+  width: 6px;
+  height: 6px;
+  background: var(--color-signal);
+}
+.sv-progress {
+  display: none;
+}
+
+/* Tablets and wide screens without motion: drawing beside the words, not stretched across. */
+@media (min-width: 768px) {
+  .sv-panel-inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    column-gap: var(--gutter);
+    align-items: start;
+    padding-bottom: 32px;
+  }
+  .sv-art-frame {
+    grid-row: 1 / span 2;
+  }
+}
+
+/* ------------------------------------------------------ the drawings */
+
+.sv-art .a-t {
+  font-family: var(--font-body);
+  font-size: 12px;
+  fill: var(--color-dim);
+}
+.sv-art .a-hi {
+  fill: var(--color-chalk);
+}
+.sv-art .a-card {
+  fill: var(--color-street);
+  stroke: var(--color-rule);
+  stroke-width: 1.5;
+}
+.sv-art .a-edge {
+  stroke: var(--color-dim);
+}
+.sv-art .a-reply {
+  fill: var(--color-deep);
+}
+.sv-art .a-faint {
+  fill: var(--color-rule);
+}
+.sv-art .a-wire {
+  fill: none;
+  stroke: var(--color-rule);
+  stroke-width: 1.5;
+}
+.sv-art .a-cell {
+  fill: none;
+  stroke: var(--color-rule);
+  stroke-width: 1.5;
+}
+.sv-art .a-taken {
+  fill: var(--color-rule);
+}
+.sv-art .a-sig {
+  fill: var(--color-signal);
+}
+.sv-art .a-tick {
+  fill: none;
+  stroke: var(--color-deep);
+  stroke-width: 2.5;
+  stroke-linecap: square;
+}
+.sv-art .a-agent {
+  fill: var(--color-deep);
+  stroke: var(--color-signal);
+  stroke-width: 1.5;
+}
+.sv-art .a-core {
+  fill: var(--color-signal);
+}
+.sv-art .a-pulse {
+  fill: none;
+  stroke: var(--color-dawn);
+  stroke-width: 1;
+  opacity: 0;
+}
+.sv-art .a-msg {
+  fill: var(--color-dawn);
+  opacity: 0;
+}
+.sv-art .a-bar {
+  fill: var(--color-dawn);
+}
+.sv-art .a-ring {
+  fill: none;
+  stroke: var(--color-dawn);
+  stroke-width: 1.5;
+}
+.sv-art .a-line {
+  fill: var(--color-dim);
+}
+.sv-art .a-line-hi {
+  fill: var(--color-chalk);
+}
+.sv-art .a-tk {
+  fill: none;
+  stroke: var(--color-dim);
+  stroke-width: 1.5;
+}
+.sv-art .a-tk-on {
+  stroke: var(--color-dawn);
+}
+.sv-art .a-node {
+  fill: var(--color-deep);
+  stroke: var(--color-dim);
+  stroke-width: 1.5;
+}
+.sv-art .a-dawn {
+  fill: var(--color-dawn);
+}
+
+/* ------------------------------------------- desktop with motion: pinned */
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .sv {
+    height: 100vh;
+    min-height: 660px;
+    padding: calc(var(--nav-h) + 16px) 0 36px;
+  }
+  .sv-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .sv-head {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: end;
+    max-width: none;
+  }
+  .sv-head h2 {
+    grid-column: 1 / span 6;
+  }
+  .sv-head p {
+    grid-column: 7 / span 5;
+    padding-bottom: 6px;
+  }
+  .sv-body {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    margin-top: clamp(20px, 4vh, 44px);
+  }
+  .sv-list {
+    grid-column: 1 / span 6;
+    align-self: center;
+    box-shadow: none;
+  }
+  .sv-item {
+    box-shadow: none;
+  }
+  .sv-btn {
+    grid-template-columns: 3ch minmax(0, 1fr);
+    padding: clamp(10px, 1.6vh, 16px) 0 clamp(10px, 1.6vh, 16px) 22px;
+  }
+  /* The active marker: a signal bar that grows down beside the title. */
+  .sv-btn::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14%;
+    bottom: 14%;
+    width: 2px;
+    background: var(--color-signal);
+    transform: scaleY(0);
+    transform-origin: 50% 0;
+    transition: transform 0.5s var(--ease-arrive);
+  }
+  .sv-item.is-open .sv-btn::before {
+    transform: scaleY(1);
+  }
+  .sv-plus {
+    display: none;
+  }
+
+  /* Every panel sits in the right half, stacked; only the active one shows. */
+  .sv-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: calc(50% - var(--gutter) / 2);
+    display: block;
+    transition: none;
+  }
+  .sv-item:not(.is-open) .sv-panel {
+    visibility: hidden;
+    opacity: 0;
+  }
+  .sv-clip {
+    height: 100%;
+    overflow: visible;
+  }
+  .sv-panel-inner {
+    height: 100%;
+    grid-template-columns: none;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    gap: clamp(12px, 2vh, 20px);
+    padding: clamp(16px, 2.4vh, 26px) 28px clamp(16px, 2.4vh, 26px);
+    background: var(--color-street);
+  }
+  .sv-art-frame {
+    grid-row: auto;
+    aspect-ratio: auto;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+  }
+  .sv-builds li {
+    padding: clamp(6px, 1vh, 10px) 0 clamp(6px, 1vh, 10px) 20px;
+  }
+  .sv-builds li::before {
+    top: calc(clamp(6px, 1vh, 10px) + 9px);
+  }
+
+  .sv-progress {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: calc(50% - var(--gutter) * 1.5);
+    height: 2px;
+    background: var(--color-rule);
+  }
+  .sv-progress span {
+    display: block;
+    height: 100%;
+    background: var(--color-signal);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+}

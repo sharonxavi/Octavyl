@@ -1,0 +1,150 @@
+/* Home: about. */
+
+/* Word masks: room for descenders ("y") under the tight headline leading. */
+.ab-title .ab-word-mask {
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.ab-story {
+  margin-top: 32px;
+  max-width: 34rem;
+}
+/* The story is still a placeholder: marked, but set at the size the real words will have. */
+.ab-story.todo-block {
+  padding: 18px 20px;
+  font-size: clamp(1.125rem, 1.25vw, 1.3125rem);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------ the ledger */
+
+.ab-label {
+  margin-bottom: 18px;
+}
+.ab-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  column-gap: clamp(20px, 2.4vw, 36px);
+  row-gap: 8px;
+  padding: 22px 0 28px;
+  box-shadow: inset 0 1px 0 var(--color-rule);
+}
+.ab-row:last-child {
+  box-shadow:
+    inset 0 1px 0 var(--color-rule),
+    inset 0 -1px 0 var(--color-rule);
+}
+.ab-principle {
+  font-family: var(--font-display);
+  --wdth: 62;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 650;
+  font-size: clamp(1.35rem, 1.75vw, 1.6rem);
+  line-height: 1.08;
+  color: var(--color-chalk);
+  text-wrap: balance;
+}
+.ab-line {
+  margin: 0;
+  padding-top: 0.2em;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-dim);
+  max-width: 36ch;
+  text-wrap: pretty;
+}
+
+@media (max-width: 767.98px) {
+  .ab-row {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px 0 22px;
+  }
+  .ab-line {
+    padding-top: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ team */
+
+.ab-team {
+  margin-top: clamp(96px, 11vw, 168px);
+}
+.ab-team-title {
+  font-family: var(--font-display);
+  --wdth: 62;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 680;
+  font-size: clamp(1.6rem, 2.1vw, 2.2rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+.ab-people {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 56px var(--gutter);
+}
+@media (min-width: 640px) {
+  .ab-people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* Desktop: every second person sits lower, so the pair reads as people, not a card grid. */
+@media (min-width: 1024px) {
+  .ab-person:nth-child(even) {
+    margin-top: clamp(80px, 9vw, 136px);
+  }
+}
+
+.ab-portrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-street);
+}
+/* Taller than its frame, so the drift never shows an edge. Same slats as .photo-slot. */
+.ab-portrait-layer {
+  position: absolute;
+  inset: -8% 0;
+  background-color: var(--color-street);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 43px, rgb(28 47 99 / 0.9) 43px 44px);
+  will-change: transform;
+}
+.ab-tag {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  background: var(--color-street);
+}
+
+.ab-person-text {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  margin-top: 20px;
+}
+.ab-name {
+  font-family: var(--font-display);
+  --wdth: 62;
+  font-variation-settings: "wdth" var(--wdth);
+  font-weight: 680;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--color-chalk);
+}
+.ab-role {
+  font-size: 0.9375rem;
+  color: var(--color-dim);
+}
+.ab-bio {
+  margin-top: 4px;
+  max-width: 40ch;
+  color: var(--color-chalk);
+}
+/* Long placeholders wrap on phones instead of running off the page. */
+.ab-person .todo {
+  white-space: normal;
+}
+.ab-story.t-lead {
+  color: var(--color-chalk);
+}
