@@ -6,7 +6,7 @@ Two pages share one shell:
 
 | Route | What it is |
 |---|---|
-| `/` | **Home.** Who we are and what we build: hero with a live route map, manifesto, services (pinned), how we work (pinned), industries row, about, recent work (pinned, sideways), FAQ, contact form. |
+| `/` | **Home.** Who we are and what we build: hero over a WebGL signal terrain (lines in perspective that rise to the right, carry messages, lift toward the cursor and ripple on click), manifesto, services (pinned), how we work (pinned), industries row, about, recent work (pinned, sideways), FAQ, contact form. |
 | `/solutions` | **See it for your business.** The original "Shutter down" experience: pick a trade and watch a sample evening and night. Unchanged apart from the shared nav and footer. |
 | `/solutions?type=salon` | Opens the sample with a trade already chosen. Accepts `dental`, `clinic`, `diagnostics`, `lab`, `gym`, `fitness`, `salon`, `parlour`, `optician`, `optical`. Changing the trade on the page updates the address. |
 | `/api/contact` | Placeholder handler for the Home form. It validates and logs; it does not send anything yet. |
@@ -81,5 +81,7 @@ node scripts/home-checks.mjs
 ```bash
 node scripts/shoot.mjs --only=desktop,mobile --steps=hero,services:0.5,how:0.5,work:0.5,contact
 ```
+
+`node scripts/hero-terrain.mjs` captures the hero idle, under a moving pointer and after a click, and prints the terrain's frame cost.
 
 `routes.mjs` covers navigation, deep links, hash links, reload and back. `home-checks.mjs` covers the form (errors, failure, success), the FAQ, and industry-card drag versus click. `shoot.mjs` writes screenshots to `.captures/`; add `--reduced` for the reduced-motion version. `node scripts/og-home.mjs` re-renders Home's social card from the live hero.

@@ -22,12 +22,12 @@ export const HOME_HERO = {
   // TODO: confirm the channels and languages you actually support.
   sub: "For clinics, gyms, salons and shops in Chennai. They work on your own WhatsApp number, in Tamil and English, and pass anything unusual to you.",
   secondary: "See it for your business",
-  legend: [
-    { kind: "customer", label: "A customer's message" },
-    { kind: "agent", label: "An agent" },
-    { kind: "calendar", label: "A booked slot" },
-  ],
-  legendNote: "Each moving light is one message on its way to a booking.",
+  // The live log beside the terrain. Entries are built from the sample trades in trades.ts.
+  log: {
+    label: "Sample messages",
+    hintFine: "Move to stir the field. Click to send a few.",
+    hintTouch: "Tap the field to send a few.",
+  },
   cue: "Scroll",
 } as const;
 

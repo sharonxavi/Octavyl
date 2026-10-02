@@ -14,26 +14,32 @@
 
 /* ------------------------------------------------------------------ field */
 
-/* The mask is a technical fade: it removes the map behind the words and under the
-   nav bar. It is not a visible gradient; nothing is painted by it. */
+/* The field fades itself under the words and the nav, inside its shader
+   (HeroTerrain.tsx). A CSS mask over the WebGL canvas left faint seams. */
 .hh-field {
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  --hh-across: linear-gradient(90deg, transparent 0%, transparent 18%, rgb(0 0 0 / 0.12) 36%, rgb(0 0 0 / 0.5) 58%, #000 80%);
-  --hh-down: linear-gradient(180deg, transparent calc(var(--nav-h) - 8px), #000 calc(var(--nav-h) + 110px));
-  -webkit-mask-image: var(--hh-across), var(--hh-down);
-  -webkit-mask-composite: source-in;
-  mask-image: var(--hh-across), var(--hh-down);
-  mask-composite: intersect;
+}
+/* The 2D fallback (no WebGL) can't fade itself, so it gets the mask. */
+.hh-field.is-2d {
+  -webkit-mask-image: linear-gradient(90deg, transparent 18%, rgb(0 0 0 / 0.5) 58%, #000 80%);
+  mask-image: linear-gradient(90deg, transparent 18%, rgb(0 0 0 / 0.5) 58%, #000 80%);
+}
+@media (max-width: 767.98px) {
+  .hh-field.is-2d {
+    -webkit-mask-image: linear-gradient(0deg, #000 14%, transparent 40%);
+    mask-image: linear-gradient(0deg, #000 14%, transparent 40%);
+  }
 }
 .hh-canvas {
   display: block;
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 1.4s var(--ease-arrive);
+  /* Short: the lines draw themselves in, nearest first, inside the canvas. */
+  transition: opacity 0.5s linear;
 }
 .hh-canvas.is-ready {
   opacity: 1;
@@ -166,81 +172,107 @@
   }
 }
 
-/* Like the key on a printed map, it sits on a small cleared patch of the map. */
-.hh-legend {
-  max-width: calc(17rem + 40px);
-  margin: 0 -20px -14px 0;
-  padding: 18px 20px 14px;
+/* The live log: messages the terrain has carried over the ridge. It sits on a
+   small cleared patch, like the key on a printed map. */
+.hh-log {
+  width: min(22rem, 100%);
+  padding: 14px 18px 12px;
   background: var(--color-night);
+  box-shadow: inset 0 0 0 1px var(--color-rule);
 }
-.hh-key {
-  display: grid;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.hh-key li,
-.hh-note {
+.hh-log-label {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  color: var(--color-dim);
 }
-.hh-note {
-  align-items: flex-start;
-  margin-top: 12px;
-}
-.hh-note .hh-mark {
-  margin-top: 0.62em;
-}
-
-/* The key's marks are drawn at the same sizes as the map's. */
-.hh-mark {
-  position: relative;
+.hh-log-live {
   flex: none;
-  width: 14px;
-  height: 8px;
-}
-.hh-mark::before,
-.hh-mark::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-.hh-mark-customer::before {
-  width: 3px;
-  height: 3px;
-  margin: -1.5px 0 0 -1.5px;
-  background: var(--color-dim);
-}
-.hh-mark-agent::before {
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
-  box-shadow: inset 0 0 0 1.25px var(--color-signal);
-}
-.hh-mark-calendar::before {
-  width: 4px;
-  height: 4px;
-  margin: -2px 0 0 -2px;
-  background: var(--color-dawn);
-}
-/* A message in flight: a short signal segment with a dawn head. */
-.hh-mark-message::before {
-  left: 0;
-  width: 11px;
-  height: 1.5px;
-  margin-top: -0.75px;
+  width: 6px;
+  height: 6px;
   background: var(--color-signal);
 }
-.hh-mark-message::after {
-  left: auto;
-  right: 0;
-  width: 3px;
-  height: 3px;
-  margin-top: -1.5px;
-  background: var(--color-dawn);
+.hh-log-list {
+  display: grid;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  box-shadow: inset 0 1px 0 var(--color-rule);
+}
+.hh-log-row {
+  display: grid;
+  grid-template-columns: 3.4rem 5.6rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  box-shadow: inset 0 -1px 0 var(--color-rule);
+}
+.hh-log-at {
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+.hh-log-ch {
+  color: var(--color-chalk);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hh-log-out {
+  color: var(--color-dawn);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Older rows step back in colour, not opacity, so they keep their contrast. */
+.hh-log-row:not(:first-child) .hh-log-ch,
+.hh-log-row:not(:first-child) .hh-log-out {
+  color: var(--color-dim);
+}
+.hh-log-hint {
+  margin-top: 10px;
+  color: var(--color-dim);
+}
+.hh-log-hint[hidden] {
+  display: none;
+}
+.hh-hint-touch {
+  display: none;
+}
+@media not all and (hover: hover) and (pointer: fine) {
+  .hh-hint-fine {
+    display: none;
+  }
+  .hh-hint-touch {
+    display: inline;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hh-log-hint {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Each new message drops in at the top. */
+  .hh-log-row:first-child {
+    animation: hh-log-in 0.6s var(--ease-arrive) both;
+  }
+  .hh-log-live {
+    animation: hh-live 2.4s steps(1, end) infinite;
+  }
+}
+/* A clip, not a fade: the text keeps its full contrast while it arrives. */
+@keyframes hh-log-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-8px);
+  }
+}
+@keyframes hh-live {
+  50% {
+    opacity: 0.25;
+  }
 }
 
 /* -------------------------------------------------------------- entrance */
@@ -286,13 +318,6 @@
 /* ----------------------------------------------------------------- phones */
 
 @media (max-width: 767.98px) {
-  /* The words span the width here, so the map lives in a band along the bottom, under its key. */
-  .hh-field {
-    -webkit-mask-image: linear-gradient(0deg, #000 0%, #000 14%, rgb(0 0 0 / 0.4) 28%, transparent 40%);
-    -webkit-mask-composite: source-over;
-    mask-image: linear-gradient(0deg, #000 0%, #000 14%, rgb(0 0 0 / 0.4) 28%, transparent 40%);
-    mask-composite: add;
-  }
   .hh-body {
     flex: none;
     padding-top: calc(var(--nav-h) + clamp(28px, 6vh, 64px));
@@ -308,22 +333,21 @@
   .hh-cue {
     display: none;
   }
-  .hh-legend {
-    max-width: 21rem;
-    margin: 0;
+  /* Phones: the field gets its own band; the log shrinks to its hint. */
+  .hh-foot {
+    min-height: 300px;
+  }
+  .hh-log {
+    width: auto;
     padding: 0;
     background: none;
+    box-shadow: none;
   }
-  .hh-key {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 18px;
+  .hh-log-label,
+  .hh-log-list {
+    display: none;
   }
-  .hh-key li,
-  .hh-note {
-    gap: 8px;
-  }
-  .hh-note {
-    margin-top: 8px;
+  .hh-log-hint {
+    margin-top: 0;
   }
 }

@@ -1,22 +1,47 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { MQ, scrub } from "@/lib/motion";
 import { HOME_HERO } from "@/content/home";
+import { TRADE_IDS, TRADES } from "@/content/trades";
 import { BookCall } from "@/components/BookCall";
 import { Magnetic } from "@/components/Magnetic";
 import { TransitionLink } from "@/components/shell/PageTransition";
 
-// The route field is the one heavy piece on the page. It never renders on the
+// The terrain is the one heavy piece on the page. It never renders on the
 // server and is only fetched once the browser is idle after first paint.
+// Browsers without WebGL get the older 2D route field instead.
+const HeroTerrain = dynamic(() => import("./HeroTerrain").then((m) => m.HeroTerrain), { ssr: false });
 const HeroField = dynamic(() => import("./HeroField").then((m) => m.HeroField), { ssr: false });
+
+type LogEntry = { id: number; at: string; channel: string; outcome: string };
+
+/**
+ * The log beside the terrain: the sample trades' messages, one trade after
+ * another, on a clock that moves forward a few minutes per message.
+ */
+const LOG_SOURCE = (() => {
+  const steps = [3, 7, 2, 5, 9, 4, 6, 3, 8];
+  let minutes = 21 * 60 + 38;
+  const out: Omit<LogEntry, "id">[] = [];
+  for (let i = 0; i < 6; i++) {
+    TRADE_IDS.forEach((id, j) => {
+      const m = TRADES[id].incoming[i];
+      minutes = (minutes + steps[(i * 5 + j) % steps.length]) % (24 * 60);
+      const at = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+      out.push({ at, channel: m.channel, outcome: m.to === "slot" ? `Booked: ${m.what}` : "Sent to you" });
+    });
+  }
+  return out;
+})();
+const LOG_ROWS = 3;
 
 /**
  * Home hero. The headline, sub and actions arrive with CSS keyframes (hero.css),
- * so they paint before hydration. Behind them, the route field draws the
- * business's messages finding their way to an agent and then to a booking.
+ * so they paint before hydration. Behind them, the signal terrain: a field of
+ * lines that rises to the right, carries messages, and answers the cursor.
  */
 export function HomeHero() {
   const root = useRef<HTMLElement>(null);
@@ -24,16 +49,37 @@ export function HomeHero() {
   const field = useRef<HTMLDivElement>(null);
   const cue = useRef<HTMLDivElement>(null);
   const [fieldOn, setFieldOn] = useState(false);
+  const [webgl, setWebgl] = useState(true);
+  const [log, setLog] = useState<LogEntry[]>(() =>
+    LOG_SOURCE.slice(0, 2)
+      .map((e, i) => ({ ...e, id: i }))
+      .reverse()
+  );
+  const next = useRef(2);
+  const pushLog = useCallback(() => {
+    const i = next.current++;
+    const e = LOG_SOURCE[i % LOG_SOURCE.length];
+    setLog((rows) => [{ ...e, id: i }, ...rows].slice(0, LOG_ROWS));
+  }, []);
+  const noWebgl = useCallback(() => setWebgl(false), []);
+  // A field that's drawn once (reduced motion, no GPU) doesn't answer the cursor, so its hint goes.
+  const [still, setStill] = useState(false);
 
   useEffect(() => {
     let idle = 0;
     let timer = 0;
     const start = () => setFieldOn(true);
-    // Safari has no requestIdleCallback: a short timeout does the same job there.
+    // After the page has loaded and the browser is idle, so the field never competes
+    // with hydration. Safari has no requestIdleCallback: a short timeout does the job there.
     const ric = typeof window.requestIdleCallback === "function";
-    if (ric) idle = window.requestIdleCallback(start, { timeout: 1200 });
-    else timer = window.setTimeout(start, 450);
+    const schedule = () => {
+      if (ric) idle = window.requestIdleCallback(start, { timeout: 1500 });
+      else timer = window.setTimeout(start, 450);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
     return () => {
+      window.removeEventListener("load", schedule);
       if (ric && idle) window.cancelIdleCallback(idle);
       window.clearTimeout(timer);
     };
@@ -70,8 +116,8 @@ export function HomeHero() {
 
   return (
     <section id="top" ref={root} className="hh" aria-labelledby="top-title">
-      <div ref={field} className="hh-field" aria-hidden="true">
-        {fieldOn && <HeroField host={root} />}
+      <div ref={field} className={`hh-field ${webgl ? "" : "is-2d"}`} aria-hidden="true">
+        {fieldOn && (webgl ? <HeroTerrain host={root} onMessage={pushLog} onFail={noWebgl} onStill={setStill} /> : <HeroField host={root} />)}
       </div>
 
       <div className="hh-body wrap">
@@ -98,7 +144,7 @@ export function HomeHero() {
         </div>
       </div>
 
-      {/* The key to the map. Both the map and its key are decoration, so screen readers skip them. */}
+      {/* The log and the cue are decoration: screen readers get the page's words instead. */}
       <div className="hh-foot wrap" aria-hidden="true">
         <div ref={cue} className="hh-cue">
           <span className="hh-cue-rule">
@@ -106,18 +152,23 @@ export function HomeHero() {
           </span>
           <span className="t-small text-dim">{HOME_HERO.cue}</span>
         </div>
-        <div className="hh-legend">
-          <ul className="hh-key t-small text-dim">
-            {HOME_HERO.legend.map((item) => (
-              <li key={item.kind}>
-                <i className={`hh-mark hh-mark-${item.kind}`} />
-                {item.label}
+        <div className="hh-log">
+          <p className="hh-log-label t-small">
+            <i className="hh-log-live" />
+            {HOME_HERO.log.label}
+          </p>
+          <ol className="hh-log-list">
+            {log.map((e) => (
+              <li key={e.id} className="hh-log-row">
+                <span className="hh-log-at t-data">{e.at}</span>
+                <span className="hh-log-ch">{e.channel}</span>
+                <span className="hh-log-out">{e.outcome}</span>
               </li>
             ))}
-          </ul>
-          <p className="hh-note t-small text-dim">
-            <i className="hh-mark hh-mark-message" />
-            <span>{HOME_HERO.legendNote}</span>
+          </ol>
+          <p className="hh-log-hint t-small" hidden={still}>
+            <span className="hh-hint-fine">{HOME_HERO.log.hintFine}</span>
+            <span className="hh-hint-touch">{HOME_HERO.log.hintTouch}</span>
           </p>
         </div>
       </div>

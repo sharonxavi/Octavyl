@@ -20,7 +20,7 @@ const stageFromTime = (t: number) => (t < 0.78 ? 0 : t < 1.78 ? 1 : t < 2.78 ? 2
  * Only transforms and opacity. Start states are set here, so the markup can stay
  * the finished diagram for reduced motion.
  */
-function buildArt(svg: SVGSVGElement) {
+function buildArt(svg: SVGSVGElement, tl: gsap.core.Timeline) {
   const q = (k: string) => Array.from(svg.querySelectorAll<SVGElement>(`[data-h="${k}"]`));
   const pieces = q("piece");
 
@@ -38,7 +38,6 @@ function buildArt(svg: SVGSVGElement) {
   gsap.set(q("agent-title"), { opacity: 0, y: 6 });
   gsap.set(q("weeks"), { opacity: 0, y: 10 });
 
-  const tl = gsap.timeline({ paused: true, defaults: { ease: ease.shutter } });
   // Discover -> Design: the notes line up, the jobs get names, the wires are pencilled in.
   tl.to(pieces, { x: (i: number) => COL[PIECES[i].group], y: (i: number) => ROWS[PIECES[i].row], rotation: 0, duration: 0.45, stagger: 0.012 }, 0.5)
     .to(q("scribble"), { opacity: 0, duration: 0.2, ease: "none" }, 0.7)
@@ -73,7 +72,7 @@ function buildArt(svg: SVGSVGElement) {
       .to(m, { x: toOut, duration: 0.55, ease: "power1.out" }, ">0.12")
       .to(m, { opacity: 0, duration: 0.12 }, ">");
   });
-  return { tl, run, msgs };
+  return { run, msgs };
 }
 
 /**
@@ -96,17 +95,31 @@ export function HowWeWork() {
       const mm = gsap.matchMedia();
       const svg = art.current!.querySelector("svg")!;
 
+      // The drawing's timeline exists from the start (the pin drives it), but its tweens are
+      // only built as the section comes within a screen of view: building them measures a
+      // hundred SVG shapes, which shouldn't cost anything while the page is first loading.
       const withArt = (onStage: (i: number) => void) => {
-        const { tl, run, msgs } = buildArt(svg);
+        const tl = gsap.timeline({ paused: true, defaults: { ease: ease.shutter } });
+        tl.to({}, { duration: 4 }, 0);
+        let art: ReturnType<typeof buildArt> | null = null;
         let current = -1;
         let visible = false;
         const sync = () => {
+          if (!art) return;
           const live = current === 3 && visible && !document.hidden;
-          if (live && run.paused()) run.restart();
-          if (!live && !run.paused()) {
-            run.pause();
-            gsap.set(msgs, { opacity: 0 });
+          if (live && art.run.paused()) art.run.restart();
+          if (!live && !art.run.paused()) {
+            art.run.pause();
+            gsap.set(art.msgs, { opacity: 0 });
           }
+        };
+        const ensure = () => {
+          if (art) return;
+          art = buildArt(svg, tl);
+          // Replay up to where the scroll already is, so tweens record their start values in order.
+          const p = tl.progress();
+          tl.progress(0, true).progress(p);
+          sync();
         };
         tl.eventCallback("onUpdate", () => {
           gsap.set(fill.current, { scaleY: tl.progress() });
@@ -117,6 +130,13 @@ export function HowWeWork() {
             sync();
           }
         });
+        const warm = ScrollTrigger.create({
+          trigger: root.current,
+          start: "top bottom+=100%",
+          end: "bottom top-=100%",
+          onToggle: (self) => self.isActive && ensure(),
+        });
+        if (warm.isActive) ensure();
         const io = new IntersectionObserver(([e]) => {
           visible = e.isIntersecting;
           sync();
@@ -124,12 +144,13 @@ export function HowWeWork() {
         io.observe(svg);
         document.addEventListener("visibilitychange", sync);
         const stop = () => {
+          warm.kill();
           io.disconnect();
           document.removeEventListener("visibilitychange", sync);
-          run.kill();
+          art?.run.kill();
           tl.kill();
         };
-        return { tl, stop };
+        return { tl, stop, ensure };
       };
 
       mm.add(MQ.full, () => {
@@ -161,8 +182,11 @@ export function HowWeWork() {
       });
 
       mm.add(MQ.compact, () => {
-        const { tl, stop } = withArt(setStep);
-        const to = (i: number) => tl.tweenTo(STAGE_AT[i], { duration: 0.9, ease: "power2.inOut" });
+        const { tl, stop, ensure } = withArt(setStep);
+        const to = (i: number) => {
+          ensure();
+          return tl.tweenTo(STAGE_AT[i], { duration: 0.9, ease: "power2.inOut" });
+        };
         const triggers = gsap.utils.toArray<HTMLElement>(".hw-step", root.current).map((li, i) =>
           ScrollTrigger.create({
             trigger: li,

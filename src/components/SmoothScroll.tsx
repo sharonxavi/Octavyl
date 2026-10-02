@@ -30,8 +30,11 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   }, [lenis]);
 
   useEffect(() => {
-    // Custom fonts change line lengths, so re-measure every trigger once they land.
-    document.fonts?.ready.then(() => ScrollTrigger.refresh());
+    // Custom fonts change line lengths, so every trigger is re-measured once they land.
+    // ScrollTrigger already refreshes on window load; only fonts that arrive after that need a second pass.
+    document.fonts?.ready.then(() => {
+      if (document.readyState === "complete") ScrollTrigger.refresh();
+    });
   }, []);
 
   return (
