@@ -45,12 +45,23 @@ export function validateContact(input: unknown): { ok: true; data: ContactInput 
   return Object.keys(errors).length ? { ok: false, errors } : { ok: true, data };
 }
 
-/** Browser side: send the enquiry to /api/contact. Resolves true when the server accepted it. */
+/**
+ * Where enquiries go. NEXT_PUBLIC_CONTACT_ENDPOINT (a form service that accepts JSON,
+ * e.g. Formspree) wins; otherwise this site's own /api/contact. The static GitHub Pages
+ * build has no server, so without an endpoint it reports "not sent" and the form offers WhatsApp.
+ */
+const ENDPOINT = process.env.NEXT_PUBLIC_CONTACT_ENDPOINT || ""; // TODO: set to your form service URL for the GitHub Pages build.
+const STATIC = process.env.NEXT_PUBLIC_STATIC === "true";
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+/** Browser side: send the enquiry. Resolves true when it was accepted. */
 export async function sendContact(data: ContactInput): Promise<boolean> {
+  const url = ENDPOINT || (STATIC ? "" : `${BASE}/api/contact`);
+  if (!url) return false;
   try {
-    const res = await fetch("/api/contact", {
+    const res = await fetch(url, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", accept: "application/json" },
       body: JSON.stringify(data),
     });
     return res.ok;

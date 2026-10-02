@@ -24,6 +24,30 @@ npm run dev
 
 Then open http://localhost:3000. Other scripts: `npm run build`, `npm start`, `npm run typecheck`, `npm run lint`, `npm run todos`.
 
+## Hosting on GitHub Pages
+
+Every push to `main` runs `.github/workflows/pages.yml`. It builds the site as static files under `/Octavyl` and publishes them to **https://sharonxavi.github.io/Octavyl/**.
+
+One-time setup in the repo: **Settings > Pages > Build and deployment > Source: GitHub Actions**. GitHub Pages from a private repository needs a paid GitHub plan; on the free plan, make the repo public or the Pages settings will ask you to upgrade. The published site is public either way.
+
+What differs on Pages (it can only serve static files):
+
+- **The contact form.** There's no server, so `/api/contact` isn't included. Until you connect a form service, the form shows its "didn't send" panel with a WhatsApp button. To make it send, create a form on a service that accepts JSON posts (for example Formspree), then add its URL as a repository variable named `CONTACT_ENDPOINT` (Settings > Secrets and variables > Actions > Variables) and re-run the workflow.
+- **Trade links.** `/solutions?type=salon` is read in the browser, so the page loads with the default trade for a moment before switching.
+- **URLs** end with a slash (`/Octavyl/solutions/`).
+
+To preview the Pages build locally, run this in PowerShell (Git Bash rewrites the `/Octavyl` path):
+
+```powershell
+$env:GITHUB_PAGES="true"; $env:PAGES_BASE_PATH="/Octavyl"; npx next build; node scripts/fix-export.mjs
+```
+
+```bash
+node scripts/serve-pages.mjs
+```
+
+Then open http://localhost:3400/Octavyl/.
+
 ## Where things live
 
 | What | Where |

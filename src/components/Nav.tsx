@@ -7,7 +7,7 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import { dur, ease } from "@/lib/motion";
 import { AREA, BRAND, EMAIL, HOURS, NAV, type NavId } from "@/content/site";
 import { getLenis, prefersReducedMotion } from "@/lib/scroll";
-import { TransitionLink, usePageTransition } from "./shell/PageTransition";
+import { TransitionLink } from "./shell/PageTransition";
 import { BookCall } from "./BookCall";
 
 /** Which item is current: the route, or on Home, the section under the middle of the screen. */
@@ -23,7 +23,6 @@ function readSpy(): NavId {
 export function Nav() {
   const pathname = usePathname();
   const onHome = pathname === "/";
-  const { navigate } = usePageTransition();
   const bar = useRef<HTMLElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const marker = useRef<HTMLSpanElement>(null);
@@ -148,12 +147,10 @@ export function Nav() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  const go = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-    e.preventDefault();
+  // Closes the menu as a menu link is followed; TransitionLink then runs the page change or the scroll.
+  const closeForLink = () => {
     setOpen(false);
     getLenis()?.start();
-    navigate(href);
   };
 
   return (
@@ -214,9 +211,9 @@ export function Nav() {
           <ul className="menu-list">
             {NAV.map((item, i) => (
               <li key={item.id} className="overflow-hidden">
-                <a
+                <TransitionLink
                   href={item.href}
-                  onClick={go(item.href)}
+                  onClick={closeForLink}
                   className={`menu-line menu-link ${active === item.id ? "is-active" : ""}`}
                   aria-current={active === item.id ? "page" : undefined}
                 >
@@ -224,7 +221,7 @@ export function Nav() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   {item.label}
-                </a>
+                </TransitionLink>
               </li>
             ))}
           </ul>

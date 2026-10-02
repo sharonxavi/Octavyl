@@ -26,6 +26,16 @@
         "3300"
       ],
       "port": 3300
+    },
+    {
+      "name": "octavyl-pages",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "C:/Users/akash/OneDrive/Desktop/Octavyl/scripts/serve-pages.mjs",
+        "--base=/Octavyl",
+        "--port=3400"
+      ],
+      "port": 3400
     }
   ]
 }

@@ -7,7 +7,6 @@ import { Process } from "@/components/sections/Process";
 import { About } from "@/components/sections/About";
 import { Contact } from "@/components/sections/Contact";
 import { pageMeta } from "@/lib/meta";
-import { DEFAULT_TRADE, tradeFromParam } from "@/lib/trade-param";
 import { BRAND } from "@/content/site";
 
 export const metadata: Metadata = pageMeta({
@@ -20,13 +19,12 @@ export const metadata: Metadata = pageMeta({
 
 /**
  * The industry experience, unchanged from the original single page.
- * /solutions?type=salon (or clinic, gym, lab, optician) opens with that trade chosen.
+ * /solutions?type=salon (or clinic, gym, lab, optician) opens with that trade chosen;
+ * the trade is read in the browser, so the page stays static (it also runs on GitHub Pages).
  */
-export default async function SolutionsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const { type } = await searchParams;
-  const initial = tradeFromParam(type) ?? DEFAULT_TRADE;
+export default function SolutionsPage() {
   return (
-    <TradeProvider key={initial} initial={initial}>
+    <TradeProvider>
       <main id="content">
         <Hero />
         <Night />

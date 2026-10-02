@@ -17,6 +17,9 @@ const LABELS: Record<string, string> = { "/": "Home", "/solutions": "Solutions" 
 
 type Pending = { hash: string | null };
 
+/** "/solutions/" and "/solutions" are the same page (static hosting adds the slash). */
+const samePath = (a: string, b: string) => a.replace(/(.)\/$/, "$1") === b.replace(/(.)\/$/, "$1");
+
 /**
  * Page changes run like the shop shutter: it comes down over the old page,
  * the route swaps behind it, the scroll resets (or lands on the linked
@@ -32,6 +35,11 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const busy = useRef(false);
   const lastPath = useRef<string | null>(null);
   const fallback = useRef(0);
+  // The app's own path, without any base path (on GitHub Pages the site lives under /<repo>).
+  const here = useRef(pathname);
+  useEffect(() => {
+    here.current = pathname;
+  }, [pathname]);
 
   const reveal = useCallback(() => {
     const el = wipe.current;
@@ -54,7 +62,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
       const hash = url.hash.length > 1 ? decodeURIComponent(url.hash.slice(1)) : null;
 
       // Same page: scroll there instead of swapping the page for itself.
-      if (url.pathname === window.location.pathname) {
+      if (samePath(url.pathname, here.current)) {
         if (hash) {
           if (scrollToSection(hash)) history.replaceState(null, "", window.location.pathname + window.location.search + url.hash);
         } else {
@@ -69,7 +77,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
       getLenis()?.stop();
 
       const el = wipe.current!;
-      if (label.current) label.current.textContent = LABELS[url.pathname] ?? "";
+      if (label.current) label.current.textContent = LABELS[url.pathname.replace(/(.)\/$/, "$1")] ?? "";
       const go = () => router.push(url.pathname + url.search, { scroll: false });
       if (prefersReducedMotion()) {
         gsap.fromTo(el, { autoAlpha: 0, yPercent: 0 }, { autoAlpha: 1, duration: 0.12, ease: "none", onComplete: go });
